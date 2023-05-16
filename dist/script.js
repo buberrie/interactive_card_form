@@ -22,13 +22,20 @@ function copyCardNum(e) {
     }
 }
 inputCardNum.addEventListener('keydown', function (e) {
-    let val = e.target.value, len = val.length, lst = val[len - 1], key = e.key;
+    let val = e.target.value, len = val.length, key = e.key;
     e.target.value =
         key === 'Backspace'
             ? val
             : len === 4 || len === 9 || len === 14
                 ? val + '\xa0'
-                : val;
+                : val.replace(/(\d{4})(?=\d)/g, '$1 ');
+});
+inputCardNum.addEventListener('paste', (e) => {
+    var _a;
+    e.preventDefault();
+    const pastedText = ((_a = e.clipboardData) === null || _a === void 0 ? void 0 : _a.getData('text/plain')) || '';
+    const formattedText = pastedText.replace(/(\d{4})(?=\d)/g, '$1 ');
+    inputCardNum.value = formattedText;
 });
 function copyName() {
     let name = document.getElementById('name');
@@ -122,10 +129,9 @@ const checkName = () => {
 };
 const checkCardNum = () => {
     let valid = false;
-    const min = 19;
     const cardNum = inputCardNum.value.trim();
-    console.log(cardNum);
-    let length = cardNum.length + 3;
+    const min = cardNum.includes('\xa0') ? 19 : 16;
+    let length = cardNum.length;
     if (!isRequired(cardNum)) {
         showError(inputCardNum, 'Card number cannot be blank.');
     }

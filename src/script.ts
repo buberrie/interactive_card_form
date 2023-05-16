@@ -27,18 +27,26 @@ function copyCardNum(e: KeyboardEvent) {
   }
 }
 
-// Auto spacing
+// Auto spacing while typing
 inputCardNum.addEventListener('keydown', function (e: KeyboardEvent) {
   let val = (e.target as HTMLInputElement).value,
-    len = val.length,
-    lst = val[len - 1],
-    key = e.key;
-    (e.target as HTMLInputElement).value =
-    key === 'Backspace'
-      ? val
-      : len === 4 || len === 9 || len === 14
-      ? val + '\xa0'
-      : val;
+                                                  len = val.length,
+                                                  key = e.key;
+                                                  (e.target as HTMLInputElement).value =
+                                                  key === 'Backspace'
+                                                    ? val
+                                                    : len === 4 || len === 9 || len === 14
+                                                    ? val + '\xa0'
+                                                    : val.replace(/(\d{4})(?=\d)/g, '$1 ');
+                                                  
+});
+
+// Auto spacing when you paste
+inputCardNum.addEventListener('paste', (e: ClipboardEvent) => {
+  e.preventDefault();
+  const pastedText = e.clipboardData?.getData('text/plain') || '';
+  const formattedText = pastedText.replace(/(\d{4})(?=\d)/g, '$1 ');
+  inputCardNum.value = formattedText;
 });
 
 function copyName() {
@@ -155,9 +163,9 @@ const checkName = (): boolean => {
 
 const checkCardNum = (): boolean => {
   let valid = false;
-  const min = 19; //16 digits + space
   const cardNum = inputCardNum.value.trim();
-  let length = cardNum.length + 3;
+  const min = cardNum.includes('\xa0') ? 19 : 16; //16 digits + space
+  let length = cardNum.length;
 
   if (!isRequired(cardNum)) {
       showError(inputCardNum, 'Card number cannot be blank.');
