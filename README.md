@@ -30,7 +30,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: [Add solution URL here](https://github.com/buberrie/interactive_card_form)
-- Live Site URL: [Add live site URL here](interactive-card-form-8lsj0ty4n-buberrie.vercel.app)
+- Live Site URL: [Add live site URL here](https://interactive-card-form-8lsj0ty4n-buberrie.vercel.app/)
 
 ## My process
 
